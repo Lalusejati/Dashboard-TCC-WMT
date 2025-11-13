@@ -99,7 +99,7 @@ const MapWrapper = withScriptjs(
           {
             featureType: "road.arterial",
             elementType: "labels.icon",
-            stylers: [{ visibility: "off" }],
+            stylers: [{ visibility:                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       "off" }],
           },
           {
             featureType: "transit",
@@ -107,7 +107,7 @@ const MapWrapper = withScriptjs(
             stylers: [{ visibility: "off" }],
           },
           {
-            featureType: "water",
+            featureType: "water",                                                                                                                                                 
             elementType: "all",
             stylers: [{ color: "#5e72e4" }, { visibility: "on" }],
           },
