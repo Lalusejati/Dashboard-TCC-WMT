@@ -16,6 +16,7 @@
 
 */
 import Index from "views/Index.js";
+import Maps from "views/examples/Maps.js";
 
 var routes = [
   {
@@ -23,6 +24,13 @@ var routes = [
     name: "Dashboard",
     icon: "ni ni-tv-2 text-primary",
     component: Index,
+    layout: "/admin",
+  },
+  {
+    path: "/maps",
+    name: "Maps",
+    icon: "ni ni-pin-3 text-orange",
+    component: Maps,
     layout: "/admin",
   },
 ];
