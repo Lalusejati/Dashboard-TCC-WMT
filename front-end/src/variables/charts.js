@@ -21,7 +21,7 @@ const Chart = require("chart.js");
 // Code from: https://codepen.io/jedtrow/full/ygRYgo
 //
 
-Chart.elements.Rectangle.prototype.draw = function() {
+Chart.elements.Rectangle.prototype.draw = function () {
   var ctx = this._chart.ctx;
   var vm = this._view;
   var left, right, top, bottom, signX, signY, borderSkipped, radius;
@@ -84,7 +84,12 @@ Chart.elements.Rectangle.prototype.draw = function() {
   // Corner points, from bottom-left to bottom-right clockwise
   // | 1 2 |
   // | 0 3 |
-  var corners = [[left, bottom], [left, top], [right, top], [right, bottom]];
+  var corners = [
+    [left, bottom],
+    [left, top],
+    [right, top],
+    [right, bottom],
+  ];
 
   // Find first (starting) corner with fallback to 'bottom'
   var borders = ["bottom", "left", "top", "right"];
@@ -115,7 +120,7 @@ Chart.elements.Rectangle.prototype.draw = function() {
     let x = corners[1][0];
     let y = corners[1][1];
     // eslint-disable-next-line
-    var radius: any = cornerRadius;
+    var radius = cornerRadius;
 
     // Fix radius being too large
     if (radius > height / 2) {
@@ -144,7 +149,7 @@ Chart.elements.Rectangle.prototype.draw = function() {
 
 var mode = "light"; //(themeMode) ? themeMode : 'light';
 var fonts = {
-  base: "Open Sans"
+  base: "Open Sans",
 };
 
 // Colors
@@ -158,7 +163,7 @@ var colors = {
     600: "#8898aa",
     700: "#525f7f",
     800: "#32325d",
-    900: "#212529"
+    900: "#212529",
   },
   theme: {
     default: "#172b4d",
@@ -167,11 +172,11 @@ var colors = {
     info: "#11cdef",
     success: "#2dce89",
     danger: "#f5365c",
-    warning: "#fb6340"
+    warning: "#fb6340",
   },
   black: "#12263F",
   white: "#FFFFFF",
-  transparent: "transparent"
+  transparent: "transparent",
 };
 
 // Methods
@@ -189,50 +194,50 @@ function chartOptions() {
         defaultFontFamily: fonts.base,
         defaultFontSize: 13,
         layout: {
-          padding: 0
+          padding: 0,
         },
         legend: {
           display: false,
           position: "bottom",
           labels: {
             usePointStyle: true,
-            padding: 16
-          }
+            padding: 16,
+          },
         },
         elements: {
           point: {
             radius: 0,
-            backgroundColor: colors.theme["primary"]
+            backgroundColor: colors.theme["primary"],
           },
           line: {
             tension: 0.4,
             borderWidth: 4,
             borderColor: colors.theme["primary"],
             backgroundColor: colors.transparent,
-            borderCapStyle: "rounded"
+            borderCapStyle: "rounded",
           },
           rectangle: {
-            backgroundColor: colors.theme["warning"]
+            backgroundColor: colors.theme["warning"],
           },
           arc: {
             backgroundColor: colors.theme["primary"],
             borderColor: mode === "dark" ? colors.gray[800] : colors.white,
-            borderWidth: 4
-          }
+            borderWidth: 4,
+          },
         },
         tooltips: {
           enabled: true,
           mode: "index",
-          intersect: false
-        }
+          intersect: false,
+        },
       },
       doughnut: {
         cutoutPercentage: 83,
-        legendCallback: function(chart) {
+        legendCallback: function (chart) {
           var data = chart.data;
           var content = "";
 
-          data.labels.forEach(function(label, index) {
+          data.labels.forEach(function (label, index) {
             var bgColor = data.datasets[0].backgroundColor[index];
 
             content += '<span class="chart-legend-item">';
@@ -245,9 +250,9 @@ function chartOptions() {
           });
 
           return content;
-        }
-      }
-    }
+        },
+      },
+    },
   };
 
   // yAxes
@@ -262,17 +267,17 @@ function chartOptions() {
       zeroLineWidth: 0,
       zeroLineColor: mode === "dark" ? colors.gray[900] : colors.gray[300],
       zeroLineBorderDash: [2],
-      zeroLineBorderDashOffset: [2]
+      zeroLineBorderDashOffset: [2],
     },
     ticks: {
       beginAtZero: true,
       padding: 10,
-      callback: function(value) {
+      callback: function (value) {
         if (!(value % 10)) {
           return value;
         }
-      }
-    }
+      },
+    },
   });
 
   // xAxes
@@ -280,11 +285,11 @@ function chartOptions() {
     gridLines: {
       drawBorder: false,
       drawOnChartArea: false,
-      drawTicks: false
+      drawTicks: false,
     },
     ticks: {
-      padding: 20
-    }
+      padding: 20,
+    },
   });
 
   return options;
@@ -301,114 +306,106 @@ function parseOptions(parent, options) {
   }
 }
 
-// Example 1 of Chart inside src/views/Index.js (Sales value - Card)
+// ##############################
+// // // Chart variables
+// #############################
+
+// chartExample1
+// Chart for Grafic Tren Error Mingguan
 let chartExample1 = {
   options: {
     scales: {
       yAxes: [
         {
           gridLines: {
-            color: colors.gray[900],
-            zeroLineColor: colors.gray[900]
+            color: "#212529",
+            zeroLineColor: "#212529",
           },
           ticks: {
-            callback: function(value) {
-              if (!(value % 10)) {
-                return "$" + value + "k";
+            callback: function (value) {
+              if (!(value % 1)) {
+                return value + "%";
               }
-            }
-          }
-        }
-      ]
+            },
+          },
+        },
+      ],
     },
     tooltips: {
       callbacks: {
-        label: function(item, data) {
+        label: function (item, data) {
           var label = data.datasets[item.datasetIndex].label || "";
           var yLabel = item.yLabel;
           var content = "";
-
           if (data.datasets.length > 1) {
             content += label;
           }
-
-          content += "$" + yLabel + "k";
+          content += yLabel + "%";
           return content;
-        }
-      }
-    }
+        },
+      },
+    },
   },
-  data1: canvas => {
-    return {
-      labels: ["May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
-      datasets: [
-        {
-          label: "Performance",
-          data: [0, 20, 10, 30, 15, 40, 20, 60, 60]
-        }
-      ]
-    };
+  data: {
+    labels: ["Sen", "Sel", "Rab", "Kam", "Jum", "Sab", "Min"],
+    datasets: [
+      {
+        label: "Error Rata-rata",
+        data: [2.5, 3.1, 4.0, 3.5, 5.1, 4.2, 3.8],
+      },
+    ],
   },
-  data2: canvas => {
-    return {
-      labels: ["May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
-      datasets: [
-        {
-          label: "Performance",
-          data: [0, 20, 5, 25, 10, 30, 15, 40, 40]
-        }
-      ]
-    };
-  }
 };
 
 // Example 2 of Chart inside src/views/Index.js (Total orders - Card)
 let chartExample2 = {
   options: {
-    scales: {
-      yAxes: [
-        {
-          ticks: {
-            callback: function(value) {
-              if (!(value % 10)) {
-                //return '$' + value + 'k'
-                return value;
-              }
-            }
-          }
-        }
-      ]
-    },
     tooltips: {
       callbacks: {
-        label: function(item, data) {
-          var label = data.datasets[item.datasetIndex].label || "";
-          var yLabel = item.yLabel;
+        label: function (item, data) {
+          var label = data.labels[item.index] || "";
+          var value = data.datasets[0].data[item.index];
           var content = "";
           if (data.datasets.length > 1) {
             content += label;
           }
-          content += yLabel;
+          content += " " + value + "%";
           return content;
-        }
-      }
-    }
+        },
+      },
+    },
+    plugins: {
+      datalabels: {
+        formatter: (value, ctx) => {
+          return value + "%";
+        },
+        color: "#fff",
+        font: {
+          weight: "bold",
+          size: 12,
+        },
+      },
+    },
+    legend: {
+      display: true,
+      position: "bottom",
+    },
   },
   data: {
-    labels: ["Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
+    labels: ["Akurat", "Ganti"],
     datasets: [
       {
-        label: "Sales",
-        data: [25, 20, 30, 22, 17, 29],
-        maxBarThickness: 10
-      }
-    ]
-  }
+        data: [78, 22],
+        backgroundColor: ["#2dce89", "#f5365c"],
+        label: "Distribusi Status",
+      },
+    ],
+  },
 };
 
 module.exports = {
   chartOptions, // used inside src/views/Index.js
   parseOptions, // used inside src/views/Index.js
   chartExample1, // used inside src/views/Index.js
-  chartExample2 // used inside src/views/Index.js
+  chartExample2, // used inside src/views/Index.js
 };

@@ -47,6 +47,7 @@
     "axios": "^0.21.0",
     "bootstrap": "^4.5.3",
     "chart.js": "2.9.3",
+    "chartjs-plugin-datalabels": "^1.0.0",
     "classnames": "2.2.6",
     "moment": "2.24.0",
     "nouislider": "14.1.1",
