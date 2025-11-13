@@ -36,16 +36,9 @@ var routes = [
   },
   {
     path: "/all-logs",
-    name: "Semua Log",
-    icon: "ni ni-archive-2 text-yellow",
-    component: AllLogs,
-    layout: "/admin",
-  },
-  {
-    path: "/historical-report",
-    name: "Laporan Historis",
+    name: "Laporan Histori",
     icon: "ni ni-bullet-list-67 text-red",
-    component: Index, // Ganti dengan komponen laporan Anda nanti
+    component: AllLogs,
     layout: "/admin",
   },
 ];

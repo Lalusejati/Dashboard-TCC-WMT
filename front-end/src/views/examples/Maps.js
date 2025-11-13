@@ -21,7 +21,8 @@ import {
   withScriptjs,
   withGoogleMap,
   GoogleMap,
-  Marker
+  Marker,
+  InfoWindow,
 } from "react-google-maps";
 
 // reactstrap components
@@ -29,64 +30,125 @@ import { Card, Container, Row } from "reactstrap";
 
 // core components
 import Header from "components/Headers/Header.js";
+
+const locations = [
+  {
+    name: "Jakarta",
+    id: "12345",
+    position: { lat: -6.2088, lng: 106.8456 },
+    status: "Ganti",
+    error: "6.2%",
+  },
+  {
+    name: "Bandung",
+    id: "67890",
+    position: { lat: -6.9175, lng: 107.6191 },
+    status: "Akurat",
+    error: "2.1%",
+  },
+  {
+    name: "Surabaya",
+    id: "54321",
+    position: { lat: -7.2575, lng: 112.7521 },
+    status: "Akurat",
+    error: "-1.5%",
+  },
+  {
+    name: "Jakarta",
+    id: "98765",
+    position: { lat: -6.2288, lng: 106.8656 }, // Slightly different coords
+    status: "Ganti",
+    error: "7.8%",
+  },
+];
+
 // mapTypeId={google.maps.MapTypeId.ROADMAP}
 const MapWrapper = withScriptjs(
-  withGoogleMap(props => (
+  withGoogleMap((props) => (
     <GoogleMap
-      defaultZoom={12}
-      defaultCenter={{ lat: 40.748817, lng: -73.985428 }}
+      defaultZoom={6}
+      defaultCenter={{ lat: -6.2088, lng: 106.8456 }}
       defaultOptions={{
         scrollwheel: false,
         styles: [
           {
             featureType: "administrative",
             elementType: "labels.text.fill",
-            stylers: [{ color: "#444444" }]
+            stylers: [{ color: "#444444" }],
           },
           {
             featureType: "landscape",
             elementType: "all",
-            stylers: [{ color: "#f2f2f2" }]
+            stylers: [{ color: "#f2f2f2" }],
           },
           {
             featureType: "poi",
             elementType: "all",
-            stylers: [{ visibility: "off" }]
+            stylers: [{ visibility: "off" }],
           },
           {
             featureType: "road",
             elementType: "all",
-            stylers: [{ saturation: -100 }, { lightness: 45 }]
+            stylers: [{ saturation: -100 }, { lightness: 45 }],
           },
           {
             featureType: "road.highway",
             elementType: "all",
-            stylers: [{ visibility: "simplified" }]
+            stylers: [{ visibility: "simplified" }],
           },
           {
             featureType: "road.arterial",
             elementType: "labels.icon",
-            stylers: [{ visibility: "off" }]
+            stylers: [{ visibility: "off" }],
           },
           {
             featureType: "transit",
             elementType: "all",
-            stylers: [{ visibility: "off" }]
+            stylers: [{ visibility: "off" }],
           },
           {
             featureType: "water",
             elementType: "all",
-            stylers: [{ color: "#5e72e4" }, { visibility: "on" }]
-          }
-        ]
+            stylers: [{ color: "#5e72e4" }, { visibility: "on" }],
+          },
+        ],
       }}
     >
-      <Marker position={{ lat: 40.748817, lng: -73.985428 }} />
+      {props.locations.map((loc, index) => (
+        <Marker
+          key={index}
+          position={loc.position}
+          onClick={() => props.onMarkerClick(loc)}
+        >
+          {props.activeLocation && props.activeLocation.id === loc.id && (
+            <InfoWindow onCloseClick={() => props.onCloseClick()}>
+              <div>
+                <h5>Lokasi: {loc.name}</h5>
+                <p>ID Pelanggan: {loc.id}</p>
+                <p>Hasil Error: {loc.error}</p>
+                <p>Status: {loc.status}</p>
+              </div>
+            </InfoWindow>
+          )}
+        </Marker>
+      ))}
     </GoogleMap>
   ))
 );
 
 class Maps extends React.Component {
+  state = {
+    activeLocation: null,
+  };
+
+  handleMarkerClick = (location) => {
+    this.setState({ activeLocation: location });
+  };
+
+  handleCloseClick = () => {
+    this.setState({ activeLocation: null });
+  };
+
   render() {
     return (
       <>
@@ -97,7 +159,7 @@ class Maps extends React.Component {
             <div className="col">
               <Card className="shadow border-0">
                 <MapWrapper
-                  googleMapURL="https://maps.googleapis.com/maps/api/js?key=AIzaSyC0gxuYF8d2FI81JJSMUvnpVMZwHM_wxes"
+                  googleMapURL={`https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY`}
                   loadingElement={<div style={{ height: `100%` }} />}
                   containerElement={
                     <div
@@ -109,6 +171,10 @@ class Maps extends React.Component {
                   mapElement={
                     <div style={{ height: `100%`, borderRadius: "inherit" }} />
                   }
+                  locations={locations}
+                  activeLocation={this.state.activeLocation}
+                  onMarkerClick={this.handleMarkerClick}
+                  onCloseClick={this.handleCloseClick}
                 />
               </Card>
             </div>

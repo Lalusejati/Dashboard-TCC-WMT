@@ -28,12 +28,110 @@ import {
   Table,
   Container,
   Row,
+  Col,
+  FormGroup,
+  Input,
+  InputGroup,
+  InputGroupAddon,
+  InputGroupText,
 } from "reactstrap";
 // core components
 import Header from "components/Headers/Header.js";
 
+const allLogsData = [
+  {
+    time: "14/11/2025 10:00",
+    location: "Jakarta",
+    customerId: "12345",
+    toolId: "WM-001",
+    technician: "Budi",
+    error: "6.2%",
+    status: "Ganti",
+    statusClass: "bg-danger",
+  },
+  {
+    time: "14/11/2025 09:30",
+    location: "Bandung",
+    customerId: "67890",
+    toolId: "WM-002",
+    technician: "Andi",
+    error: "2.1%",
+    status: "Akurat",
+    statusClass: "bg-success",
+  },
+  {
+    time: "13/11/2025 15:00",
+    location: "Surabaya",
+    customerId: "54321",
+    toolId: "WM-001",
+    technician: "Budi",
+    error: "-1.5%",
+    status: "Akurat",
+    statusClass: "bg-success",
+  },
+  {
+    time: "13/11/2025 14:00",
+    location: "Jakarta",
+    customerId: "98765",
+    toolId: "WM-003",
+    technician: "Citra",
+    error: "7.8%",
+    status: "Ganti",
+    statusClass: "bg-danger",
+  },
+  {
+    time: "12/11/2025 11:00",
+    location: "Yogyakarta",
+    customerId: "11223",
+    toolId: "WM-002",
+    technician: "Andi",
+    error: "0.5%",
+    status: "Akurat",
+    statusClass: "bg-success",
+  },
+  {
+    time: "12/11/2025 10:00",
+    location: "Jakarta",
+    customerId: "44556",
+    toolId: "WM-001",
+    technician: "Budi",
+    error: "-0.2%",
+    status: "Akurat",
+    statusClass: "bg-success",
+  },
+];
+
 class AllLogs extends React.Component {
+  state = {
+    logs: allLogsData,
+    searchTerm: "",
+    filterStatus: "Semua",
+  };
+
+  handleSearch = (event) => {
+    this.setState({ searchTerm: event.target.value });
+  };
+
+  handleFilter = (event) => {
+    this.setState({ filterStatus: event.target.value });
+  };
+
   render() {
+    const { logs, searchTerm, filterStatus } = this.state;
+
+    const filteredLogs = logs
+      .filter((log) => {
+        // Filter by status
+        if (filterStatus === "Semua") {
+          return true;
+        }
+        return log.status === filterStatus;
+      })
+      .filter((log) => {
+        // Search by customer ID
+        return log.customerId.toLowerCase().includes(searchTerm.toLowerCase());
+      });
+
     return (
       <>
         <Header />
@@ -44,14 +142,48 @@ class AllLogs extends React.Component {
             <div className="col">
               <Card className="shadow">
                 <CardHeader className="border-0">
-                  <h3 className="mb-0">Log Pengujian Terakhir</h3>
+                  <Row className="align-items-center">
+                    <Col xs="12" md="4">
+                      <h3 className="mb-0">Laporan Histori Lengkap</h3>
+                    </Col>
+                    <Col xs="12" md="4">
+                      <FormGroup className="mb-0">
+                        <InputGroup className="input-group-alternative">
+                          <InputGroupAddon addonType="prepend">
+                            <InputGroupText>
+                              <i className="fas fa-search" />
+                            </InputGroupText>
+                          </InputGroupAddon>
+                          <Input
+                            placeholder="Cari ID Pelanggan"
+                            type="text"
+                            value={this.state.searchTerm}
+                            onChange={this.handleSearch}
+                          />
+                        </InputGroup>
+                      </FormGroup>
+                    </Col>
+                    <Col xs="12" md="4">
+                      <FormGroup className="mb-0">
+                        <Input
+                          type="select"
+                          value={this.state.filterStatus}
+                          onChange={this.handleFilter}
+                        >
+                          <option value="Semua">Semua Status</option>
+                          <option value="Akurat">Akurat</option>
+                          <option value="Ganti">Ganti</option>
+                        </Input>
+                      </FormGroup>
+                    </Col>
+                  </Row>
                 </CardHeader>
                 <Table className="align-items-center table-flush" responsive>
                   <thead className="thead-light">
                     <tr>
                       <th scope="col">Waktu Uji</th>
                       <th scope="col">Lokasi</th>
-                      <th scope="col">ID Pelanggan</th>
+                      <th scope="-col">ID Pelanggan</th>
                       <th scope="col">ID Alat</th>
                       <th scope="col">Teknisi</th>
                       <th scope="col">Hasil Error</th>
@@ -59,90 +191,22 @@ class AllLogs extends React.Component {
                     </tr>
                   </thead>
                   <tbody>
-                    <tr>
-                      <td>14/11/2025 10:00</td>
-                      <td>Jakarta</td>
-                      <td>12345</td>
-                      <td>WM-001</td>
-                      <td>Budi</td>
-                      <td>6.2%</td>
-                      <td>
-                        <span className="badge badge-dot mr-4">
-                          <i className="bg-danger" />
-                          Ganti
-                        </span>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td>14/11/2025 09:30</td>
-                      <td>Bandung</td>
-                      <td>67890</td>
-                      <td>WM-002</td>
-                      <td>Andi</td>
-                      <td>2.1%</td>
-                      <td>
-                        <span className="badge badge-dot mr-4">
-                          <i className="bg-success" />
-                          Akurat
-                        </span>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td>13/11/2025 15:00</td>
-                      <td>Surabaya</td>
-                      <td>54321</td>
-                      <td>WM-001</td>
-                      <td>Budi</td>
-                      <td>-1.5%</td>
-                      <td>
-                        <span className="badge badge-dot mr-4">
-                          <i className="bg-success" />
-                          Akurat
-                        </span>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td>13/11/2025 14:00</td>
-                      <td>Jakarta</td>
-                      <td>98765</td>
-                      <td>WM-003</td>
-                      <td>Citra</td>
-                      <td>7.8%</td>
-                      <td>
-                        <span className="badge badge-dot mr-4">
-                          <i className="bg-danger" />
-                          Ganti
-                        </span>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td>12/11/2025 11:00</td>
-                      <td>Yogyakarta</td>
-                      <td>11223</td>
-                      <td>WM-002</td>
-                      <td>Andi</td>
-                      <td>0.5%</td>
-                      <td>
-                        <span className="badge badge-dot mr-4">
-                          <i className="bg-success" />
-                          Akurat
-                        </span>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td>12/11/2025 10:00</td>
-                      <td>Jakarta</td>
-                      <td>44556</td>
-                      <td>WM-001</td>
-                      <td>Budi</td>
-                      <td>-0.2%</td>
-                      <td>
-                        <span className="badge badge-dot mr-4">
-                          <i className="bg-success" />
-                          Akurat
-                        </span>
-                      </td>
-                    </tr>
+                    {filteredLogs.map((log, index) => (
+                      <tr key={index}>
+                        <td>{log.time}</td>
+                        <td>{log.location}</td>
+                        <td>{log.customerId}</td>
+                        <td>{log.toolId}</td>
+                        <td>{log.technician}</td>
+                        <td>{log.error}</td>
+                        <td>
+                          <span className="badge badge-dot mr-4">
+                            <i className={log.statusClass} />
+                            {log.status}
+                          </span>
+                        </td>
+                      </tr>
+                    ))}
                   </tbody>
                 </Table>
                 <CardFooter className="py-4">
