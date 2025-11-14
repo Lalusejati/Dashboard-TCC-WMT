@@ -1,5 +1,5 @@
 const { DataTypes } = require("sequelize");
-const sequelize = require("../config/database"); // We will create this file next
+const sequelize = require("../config/database");
 
 const Pengujian = sequelize.define(
   "Pengujian",
@@ -9,46 +9,51 @@ const Pengujian = sequelize.define(
       autoIncrement: true,
       primaryKey: true,
     },
-    id_pelanggan: {
+    idPengguna: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+    },
+    idAlat: {
       type: DataTypes.STRING,
-      allowNull: false,
+      allowNull: true,
     },
-    waktu_uji: {
+    noSeriWm: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
+    merekWm: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
+    standMeterAwal: {
+      type: DataTypes.DOUBLE,
+      allowNull: true,
+    },
+    standMeterAkhir: {
+      type: DataTypes.DOUBLE,
+      allowNull: true,
+    },
+    durasiPengujian: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+    },
+    statusPengujian: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
+    waktuMulai: {
       type: DataTypes.DATE,
-      allowNull: false,
+      allowNull: true,
     },
-    lokasi_gps_lat: {
-      type: DataTypes.DECIMAL(10, 8),
-      allowNull: false,
-    },
-    lokasi_gps_lng: {
-      type: DataTypes.DECIMAL(11, 8),
-      allowNull: false,
-    },
-    hasil_tes_1: {
-      type: DataTypes.DECIMAL(5, 2),
-      allowNull: false,
-    },
-    hasil_tes_2: {
-      type: DataTypes.DECIMAL(5, 2),
-      allowNull: false,
-    },
-    hasil_tes_3: {
-      type: DataTypes.DECIMAL(5, 2),
-      allowNull: false,
-    },
-    error_rata_rata: {
-      type: DataTypes.DECIMAL(5, 2),
-      allowNull: false,
-    },
-    status: {
-      type: DataTypes.ENUM("Akurat", "Ganti"),
-      allowNull: false,
+    waktuSelesai: {
+      type: DataTypes.DATE,
+      allowNull: true,
     },
   },
   {
     tableName: "pengujian",
-    timestamps: false, // Assuming you don't want createdAt/updatedAt columns
+    // Sequelize will automatically manage createdAt and updatedAt columns
+    // so `timestamps: true` is the default and does not need to be specified.
   }
 );
 

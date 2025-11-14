@@ -19,19 +19,30 @@
 */
 const express = require("express");
 const bodyParser = require("body-parser");
+const path = require("path");
+const cors = require("cors"); // Import cors
+
 const sequelize = require("./config/database"); // Import sequelize connection
 const compression = require("compression");
 const http = require("http");
-const cors = require("cors");
-const path = require("path");
-const CronJob = require("cron").CronJob;
 const crons = require("./config/crons");
+const mqttClient = require("./config/mqtt"); // Import MQTT client
+const Pengujian = require("./models/pengujian");
 
-require("dotenv").config();
+require("dotenv").config({ path: path.resolve(__dirname, ".env") });
 
 // Instantiate express
 const app = express();
-app.use(compression());
+
+// Enable CORS for all routes
+app.use(cors());
+
+// Bodyparser Middleware
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
+
+// Start MQTT client
+// mqttClient.connectAndSubscribe(); // Will be started with the server
 
 // Database Connection
 sequelize
@@ -48,13 +59,6 @@ sequelize
     console.error("Unable to connect to the database:", err);
   });
 
-app.use(cors());
-
-// Express body parser
-app.use("/public", express.static("public"));
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use(bodyParser.json());
-
 // REACT BUILD for production
 if (process.env.NODE_ENV === "PROD") {
   app.use(express.static(path.join(__dirname, "build")));
@@ -67,17 +71,19 @@ if (process.env.NODE_ENV === "PROD") {
 app.use("/api/pengujian", require("./routes/pengujian"));
 
 // run at 3:10 AM -> delete old tokens
-const tokensCleanUp = new CronJob("10 3 * * *", function () {
-  crons.tokensCleanUp();
-});
-tokensCleanUp.start();
+// const tokensCleanUp = new CronJob("10 3 * * *", function () {
+//   crons.tokensCleanUp();
+// });
+// tokensCleanUp.start();
 
-const PORT = process.env.PORT;
+const PORT = process.env.PORT || 5100;
 
 http.createServer({}, app).listen(PORT, function () {
   console.log(
     "App listening on port " + PORT + "! Go to http://localhost:" + PORT + "/"
   );
+  // Start MQTT client after server starts
+  mqttClient.connectAndSubscribe();
 });
 
 // FOR HTTPS ONLY
