@@ -68,47 +68,21 @@ const Index = () => {
 
         // --- LOGIKA BARU UNTUK GRAFIK GARIS ---
         if (data.recentTests && data.recentTests.length > 0) {
-          const firstDate = new Date(data.recentTests[0].createdAt)
-            .toISOString()
-            .split("T")[0];
-          const allSameDay = data.recentTests.every(
-            (test) =>
-              new Date(test.createdAt).toISOString().split("T")[0] === firstDate
-          );
+          // Karena API sekarang hanya mengirim data hari ini, kita bisa asumsikan allSameDay = true
+          // Kelompokkan data per jam:menit
+          const testsByTime = data.recentTests.reduce((acc, test) => {
+            const time = new Date(test.createdAt).toLocaleTimeString("id-ID", {
+              hour: "2-digit",
+              minute: "2-digit",
+            });
+            acc[time] = (acc[time] || 0) + 1;
+            return acc;
+          }, {});
 
-          let labels;
-          let dataPoints;
+          const labels = Object.keys(testsByTime).reverse();
+          const dataPoints = Object.values(testsByTime).reverse();
 
-          if (allSameDay && data.recentTests.length > 1) {
-            // Jika semua data di hari yang sama, kelompokkan per jam:menit
-            const testsByTime = data.recentTests.reduce((acc, test) => {
-              const time = new Date(test.createdAt).toLocaleTimeString(
-                "id-ID",
-                {
-                  hour: "2-digit",
-                  minute: "2-digit",
-                }
-              );
-              acc[time] = (acc[time] || 0) + 1;
-              return acc;
-            }, {});
-            labels = Object.keys(testsByTime).reverse();
-            dataPoints = Object.values(testsByTime).reverse();
-          } else {
-            // Jika data dari hari berbeda, kelompokkan per hari
-            const testsByDay = data.recentTests.reduce((acc, test) => {
-              const date = new Date(test.createdAt).toLocaleDateString(
-                "id-ID",
-                { day: "numeric", month: "short" }
-              );
-              acc[date] = (acc[date] || 0) + 1;
-              return acc;
-            }, {});
-            labels = Object.keys(testsByDay).reverse();
-            dataPoints = Object.values(testsByDay).reverse();
-          }
-
-          // --- LOGIKA BARU: Membuat data kumulatif ---
+          // --- LOGIKA KUMULATIF ---
           const cumulativeData = dataPoints.reduce((acc, val) => {
             const lastValue = acc.length > 0 ? acc[acc.length - 1] : 0;
             acc.push(lastValue + val);
@@ -122,6 +96,17 @@ const Index = () => {
               {
                 ...chartExample1.data.datasets[0],
                 data: cumulativeData, // Menggunakan data kumulatif
+              },
+            ],
+          });
+        } else {
+          // Jika tidak ada data, pastikan grafik kosong
+          setLineChartData({
+            labels: [],
+            datasets: [
+              {
+                ...chartExample1.data.datasets[0],
+                data: [],
               },
             ],
           });
