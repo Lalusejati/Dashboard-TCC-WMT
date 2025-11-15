@@ -23,7 +23,7 @@ const path = require("path");
 const cors = require("cors");
 const compression = require("compression");
 const http = require("http");
-const { Sequelize } = require("sequelize");
+const sequelize = require("./config/db"); // Menggunakan koneksi terpusat
 const mqtt = require("mqtt");
 const Pengujian = require("./models/pengujian");
 
@@ -39,17 +39,7 @@ app.use(cors());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
-// --- Database Connection (Sequelize) ---
-const sequelize = new Sequelize(
-  process.env.DB_NAME,
-  process.env.DB_USER,
-  process.env.DB_PASS,
-  {
-    host: process.env.DB_HOST,
-    dialect: "mysql",
-  }
-);
-
+// --- Database Connection Verification ---
 sequelize
   .authenticate()
   .then(() => {
@@ -68,6 +58,8 @@ const mqttClient = {
   connectAndSubscribe: () => {
     const options = {
       reconnectPeriod: 1000, // try to reconnect every 1 second
+      username: process.env.MQTT_USERNAME,
+      password: process.env.MQTT_PASSWORD,
     };
     const client = mqtt.connect(process.env.MQTT_BROKER_URL, options);
 

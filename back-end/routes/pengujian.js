@@ -118,4 +118,35 @@ router.post("/", async (req, res) => {
   }
 });
 
+// Endpoint untuk pengujian memasukkan data dummy
+// router.get("/test-insert", async (req, res) => {
+//   try {
+//     const dummyData = {
+//       idPengguna: 99,
+//       idAlat: `WMT-FINAL-TEST-01`,
+//       noSeriWm: `WM-FINAL-2408`,
+//       merekWm: "Merek Final Test",
+//       standMeterAwal: 300,
+//       standMeterAkhir: 303,
+//       durasiPengujian: 150,
+//       statusPengujian: "Lolos",
+//       waktuMulai: new Date(),
+//       waktuSelesai: new Date(),
+//     };
+//
+//     const created = await Pengujian.create(dummyData);
+//
+//     console.log("Data creation successful:", created.toJSON());
+//     res.status(201).json({
+//       message: "Test data created successfully. Please check your TiDB UI.",
+//       data: created,
+//     });
+//   } catch (error) {
+//     console.error("Error creating test data:", error);
+//     res
+//       .status(500)
+//       .json({ message: "Error creating test data", error: error.message });
+//   }
+// });
+
 module.exports = router;
