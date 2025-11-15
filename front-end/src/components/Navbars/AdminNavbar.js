@@ -34,7 +34,6 @@ import {
   Container,
   Media,
 } from "reactstrap";
-import { logout } from "../../network/ApiAxios";
 
 const AdminNavbar = (props) => {
   return (

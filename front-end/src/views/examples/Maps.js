@@ -15,7 +15,7 @@
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
 */
-import React from "react";
+import React, { useState, useEffect } from "react";
 // react plugin used to create google maps
 import {
   withScriptjs,
@@ -30,8 +30,10 @@ import { Card, Container, Row } from "reactstrap";
 
 // core components
 import Header from "components/Headers/Header.js";
+import ApiAxios from "network/ApiAxios";
 
-const locations = [
+// Dummy locations for now, will be replaced by API data later if we proceed
+const staticLocations = [
   {
     name: "Jakarta",
     id: "12345",
@@ -45,20 +47,6 @@ const locations = [
     position: { lat: -6.9175, lng: 107.6191 },
     status: "Akurat",
     error: "2.1%",
-  },
-  {
-    name: "Surabaya",
-    id: "54321",
-    position: { lat: -7.2575, lng: 112.7521 },
-    status: "Akurat",
-    error: "-1.5%",
-  },
-  {
-    name: "Jakarta",
-    id: "98765",
-    position: { lat: -6.2288, lng: 106.8656 }, // Slightly different coords
-    status: "Ganti",
-    error: "7.8%",
   },
 ];
 
@@ -136,53 +124,84 @@ const MapWrapper = withScriptjs(
   ))
 );
 
-class Maps extends React.Component {
-  state = {
-    activeLocation: null,
+const Maps = () => {
+  const [activeLocation, setActiveLocation] = useState(null);
+  const [stats, setStats] = useState({
+    totalTests: 0,
+    passed: 0,
+    failed: 0,
+    passRate: 0,
+  });
+  // We still need to fetch logs to calculate stats, even if not shown on map yet
+  useEffect(() => {
+    const fetchStatsForHeader = async () => {
+      try {
+        const response = await ApiAxios.get("/pengujian");
+        const allLogs = response.data;
+
+        const totalTests = allLogs.length;
+        const passed = allLogs.filter(
+          (log) => log.statusPengujian.toLowerCase() === "lolos"
+        ).length;
+        const failed = totalTests - passed;
+        const passRate = totalTests > 0 ? (passed / totalTests) * 100 : 0;
+
+        setStats({
+          totalTests,
+          passed,
+          failed,
+          passRate: passRate.toFixed(2),
+        });
+      } catch (err) {
+        console.error("Failed to fetch stats for Maps header:", err);
+        // Set stats to 0 or show an error if fetching fails
+        setStats({ totalTests: 0, passed: 0, failed: 0, passRate: 0 });
+      }
+    };
+
+    fetchStatsForHeader();
+  }, []);
+
+  const handleMarkerClick = (location) => {
+    setActiveLocation(location);
   };
 
-  handleMarkerClick = (location) => {
-    this.setState({ activeLocation: location });
+  const handleCloseClick = () => {
+    setActiveLocation(null);
   };
 
-  handleCloseClick = () => {
-    this.setState({ activeLocation: null });
-  };
-
-  render() {
-    return (
-      <>
-        <Header />
-        {/* Page content */}
-        <Container className="mt--7" fluid>
-          <Row>
-            <div className="col">
-              <Card className="shadow border-0">
-                <MapWrapper
-                  googleMapURL={`https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY`}
-                  loadingElement={<div style={{ height: `100%` }} />}
-                  containerElement={
-                    <div
-                      style={{ height: `600px` }}
-                      className="map-canvas"
-                      id="map-canvas"
-                    />
-                  }
-                  mapElement={
-                    <div style={{ height: `100%`, borderRadius: "inherit" }} />
-                  }
-                  locations={locations}
-                  activeLocation={this.state.activeLocation}
-                  onMarkerClick={this.handleMarkerClick}
-                  onCloseClick={this.handleCloseClick}
-                />
-              </Card>
-            </div>
-          </Row>
-        </Container>
-      </>
-    );
-  }
-}
+  return (
+    <>
+      <Header stats={stats} />
+      {/* Page content */}
+      <Container className="mt--7" fluid>
+        <Row>
+          <div className="col">
+            <Card className="shadow border-0">
+              <MapWrapper
+                googleMapURL={`https://maps.googleapis.com/maps/api/js?key=AIzaSyC0gxuYF8d2FI81JJSMUvnpVMZwHM_wxes`}
+                loadingElement={<div style={{ height: `100%` }} />}
+                containerElement={
+                  <div
+                    style={{ height: `600px` }}
+                    className="map-canvas"
+                    id="map-canvas"
+                  />
+                }
+                mapElement={
+                  <div style={{ height: `100%`, borderRadius: "inherit" }} />
+                }
+                locations={staticLocations} // Using static locations for now
+                activeLocation={activeLocation}
+                onMarkerClick={handleMarkerClick}
+                onCloseClick={handleCloseClick}
+              />
+            </Card>
+          </div>
+        </Row>
+      </Container>
+    </>
+  );
+};
 
 export default Maps;
