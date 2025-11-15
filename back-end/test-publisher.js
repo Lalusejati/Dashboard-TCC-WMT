@@ -1,7 +1,7 @@
 const mqtt = require("mqtt");
 
 // Konfigurasi MQTT Broker (harus sama dengan di subscriber/back-end)
-const brokerUrl = "mqtt://localhost:1883";
+const brokerUrl = "mqtt://broker.hivemq.com";
 const topic = "pengujian/data";
 
 // Data contoh yang akan dikirim
@@ -20,8 +20,8 @@ const testData = {
 };
 
 const testData = {
-  idPengguna: 1,
-  idAlat: "WMT-001",
+  idPengguna: 3,
+  idAlat: "WMT-003",
   noSeriWm: `WM-A-${Math.floor(100000 + Math.random() * 900000)}`, // No seri acak
   merekWm: "Merek A",
   standMeterAwal: 125.5,
@@ -74,21 +74,22 @@ const testData = {
 */
 
 const testData = {
-  idPengguna: 1,
-  idAlat: "WMT-SIM-01",
-  noSeriWm: "SN-SIM-98765",
-  merekWm: "Simulasi-Test",
-  standMeterAwal: 80.0,
-  standMeterAkhir: 85.2,
-  durasiPengujian: 137,
+  idPengguna: 3,
+  idAlat: "WMT-003",
+  noSeriWm: `WM-A-${Math.floor(100000 + Math.random() * 900000)}`, // No seri acak
+  merekWm: "Merek A",
+  standMeterAwal: 125.5,
+  standMeterAkhir: 126.5,
+  durasiPengujian: 60, // 60 detik
   statusPengujian: "Lolos",
   waktuMulai: new Date().toISOString(),
-  waktuSelesai: new Date(Date.now() + 120 * 1000).toISOString(), // 120 detik setelah mulai
+  waktuSelesai: new Date(Date.now() + 60000).toISOString(), // 60 detik setelah mulai
 };
 
 // Opsi koneksi
 const options = {
   clientId: `test-publisher-${Math.random().toString(16).slice(2, 8)}`,
+  reconnectPeriod: 1000, // Coba sambung ulang setiap 1 detik
 };
 
 // Buat koneksi ke broker
@@ -114,7 +115,11 @@ client.on("connect", () => {
   });
 });
 
+client.on("reconnect", () => {
+  console.log("Reconnecting to MQTT Broker...");
+});
+
 client.on("error", (err) => {
   console.error("MQTT Client Error:", err);
-  client.end();
+  // Jangan panggil client.end() agar bisa rekoneksi otomatis
 });

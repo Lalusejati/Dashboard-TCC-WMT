@@ -20,13 +20,11 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const path = require("path");
-const cors = require("cors"); // Import cors
-
-const sequelize = require("./config/database"); // Import sequelize connection
+const cors = require("cors");
 const compression = require("compression");
 const http = require("http");
-const crons = require("./config/crons");
-const mqttClient = require("./config/mqtt"); // Import MQTT client
+const { Sequelize } = require("sequelize");
+const mqtt = require("mqtt");
 const Pengujian = require("./models/pengujian");
 
 require("dotenv").config({ path: path.resolve(__dirname, ".env") });
@@ -41,15 +39,21 @@ app.use(cors());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
-// Start MQTT client
-// mqttClient.connectAndSubscribe(); // Will be started with the server
+// --- Database Connection (Sequelize) ---
+const sequelize = new Sequelize(
+  process.env.DB_NAME,
+  process.env.DB_USER,
+  process.env.DB_PASS,
+  {
+    host: process.env.DB_HOST,
+    dialect: "mysql",
+  }
+);
 
-// Database Connection
 sequelize
   .authenticate()
   .then(() => {
     console.log("MariaDB/MySQL connection has been established successfully.");
-    // Sync all models
     return sequelize.sync();
   })
   .then(() => {
@@ -58,6 +62,50 @@ sequelize
   .catch((err) => {
     console.error("Unable to connect to the database:", err);
   });
+
+// --- MQTT Client ---
+const mqttClient = {
+  connectAndSubscribe: () => {
+    const options = {
+      reconnectPeriod: 1000, // try to reconnect every 1 second
+    };
+    const client = mqtt.connect(process.env.MQTT_BROKER_URL, options);
+
+    client.on("connect", () => {
+      console.log("Connected to MQTT Broker!");
+      client.subscribe(process.env.MQTT_TOPIC, (err) => {
+        if (!err) {
+          console.log(`Subscribed to topic: ${process.env.MQTT_TOPIC}`);
+        }
+      });
+    });
+
+    client.on("reconnect", () => {
+      console.log("Reconnecting to MQTT Broker...");
+    });
+
+    client.on("message", (topic, message) => {
+      console.log(
+        `Message received from topic ${topic}: ${message.toString()}`
+      );
+      try {
+        const data = JSON.parse(message.toString());
+        Pengujian.create(data)
+          .then(() => console.log("Successfully saved data to database"))
+          .catch((error) =>
+            console.error("Failed to save data to database:", error)
+          );
+      } catch (error) {
+        console.error("Error parsing MQTT message or saving to DB:", error);
+      }
+    });
+
+    client.on("error", (error) => {
+      console.error("MQTT Client Error:", error);
+      // The client will automatically try to reconnect, so we don't need to end it.
+    });
+  },
+};
 
 // REACT BUILD for production
 if (process.env.NODE_ENV === "PROD") {
@@ -69,12 +117,6 @@ if (process.env.NODE_ENV === "PROD") {
 
 // Initialize routes middleware
 app.use("/api/pengujian", require("./routes/pengujian"));
-
-// run at 3:10 AM -> delete old tokens
-// const tokensCleanUp = new CronJob("10 3 * * *", function () {
-//   crons.tokensCleanUp();
-// });
-// tokensCleanUp.start();
 
 const PORT = process.env.PORT || 5100;
 
