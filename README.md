@@ -313,3 +313,51 @@ Facebook: <https://www.facebook.com/CreativeTim?ref=creativetim> & <https://www.
 Dribbble: <https://dribbble.com/creativetim?ref=creativetim>
 
 Instagram: <https://www.instagram.com/CreativeTimOfficial?ref=creativetim>
+
+## Alur Sistem di Lingkungan Produksi
+
+Bagian ini menjelaskan alur kerja data dari awal hingga akhir dalam skenario penggunaan nyata setelah semua komponen sistem di-hosting di cloud.
+
+### Aktor Utama
+
+1.  **Perangkat IoT (Sensor):** Perangkat fisik (misalnya, berbasis ESP32) yang terpasang di lapangan untuk mengukur kualitas air.
+2.  **Broker MQTT (Cloud):** Layanan broker MQTT pribadi yang berjalan 24/7 (misalnya, **HiveMQ Cloud** atau **EMQ X Cloud**). Ini bertindak sebagai perantara pesan.
+3.  **Server Backend (Cloud):** Aplikasi Node.js yang berjalan di platform hosting seperti **Render** atau **Heroku**. Bertugas memproses dan menyimpan data.
+4.  **Database (Cloud):** Database MySQL/MariaDB yang berjalan di layanan terkelola seperti **PlanetScale** atau **Neon**.
+5.  **Server Frontend (Cloud):** Aplikasi React yang di-hosting sebagai situs statis di platform seperti **Vercel** atau **Netlify**.
+
+### Alur Data End-to-End
+
+![Alur Produksi](https://i.imgur.com/example.png "Diagram Alur Produksi") <!-- Anda bisa mengganti URL ini dengan diagram alur yang sebenarnya -->
+
+**1. Inisialisasi Perangkat Sensor**
+
+- Saat perangkat IoT dinyalakan, ia akan terhubung ke internet.
+- Perangkat membuka **satu koneksi permanen** ke Broker MQTT Cloud menggunakan kredensial dan topik yang unik dan aman (misalnya, `tcc/proyek-anda/sensor-01`). Koneksi ini akan dijaga tetap terbuka.
+
+**2. Pengiriman Data dari Sensor**
+
+- Secara berkala (misalnya, setiap 5 menit), perangkat akan:
+  1.  Membaca nilai dari sensor fisiknya (suhu, pH, dll.).
+  2.  Menyusun data tersebut ke dalam format **JSON**. Contoh: `{"temperature": 28.5, "ph": 7.1}`.
+  3.  Mengirim (publish) pesan JSON tersebut ke topiknya melalui koneksi MQTT yang sudah ada. Proses ini sangat cepat dan efisien.
+
+**3. Broker MQTT Menerima dan Meneruskan**
+
+- Broker MQTT di cloud menerima pesan dari perangkat.
+- Broker secara instan mengidentifikasi bahwa **Server Backend** Anda adalah pelanggan (subscriber) dari topik tersebut dan langsung meneruskan pesannya.
+
+**4. Backend Memproses dan Menyimpan Data**
+
+- Server Backend (yang selalu terhubung ke broker) menerima pesan JSON.
+- Backend melakukan validasi data, lalu **menyimpannya ke dalam tabel di Database Cloud**.
+
+**5. Pengguna Mengakses Website**
+
+- Pengguna membuka browser dan mengakses URL frontend (misalnya, `https://dashboard-anda.com`).
+- Aplikasi React (dari Vercel/Netlify) dimuat di browser.
+- Komponen React membuat permintaan API ke Server Backend (misalnya, `GET https://api.anda.com/api/pengujian`).
+- Backend mengambil data dari Database Cloud dan mengirimkannya kembali ke browser.
+- Aplikasi React menampilkan data tersebut dalam bentuk tabel, grafik, dan statistik kepada pengguna.
+
+Arsitektur terpisah ini memastikan sistem yang **efisien, andal, dan mudah diskalakan**.
