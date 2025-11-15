@@ -1,7 +1,7 @@
 {
-  "name": "nodejs-mongodb-rest-api-login",
-  "version": "0.1.0",
-  "description": "A RESTful back-end login starter kit using Node.js, Express.js, and MongoDB",
+  "name": "argon-react-nodejs",
+  "version": "1.0.0",
+  "description": "Argon React Nodejs",
   "main": "app.js",
   "scripts": {
     "start": "nodemon app",
