@@ -32,8 +32,18 @@ require("dotenv").config({ path: path.resolve(__dirname, ".env") });
 // Instantiate express
 const app = express();
 
+// Konfigurasi CORS untuk mengizinkan koneksi dari frontend lokal
+const corsOptions = {
+  origin: [
+    'http://localhost:3000', // Alamat default React dev server
+    'http://localhost:3001', // Alamat lain yang mungkin
+    // Nanti kita bisa tambahkan URL frontend setelah di-deploy
+  ],
+  optionsSuccessStatus: 200 
+};
+
 // Enable CORS for all routes
-app.use(cors());
+app.use(cors(corsOptions));
 
 // Bodyparser Middleware
 app.use(bodyParser.urlencoded({ extended: false }));
