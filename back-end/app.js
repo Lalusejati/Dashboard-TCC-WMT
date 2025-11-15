@@ -35,11 +35,11 @@ const app = express();
 // Konfigurasi CORS untuk mengizinkan koneksi dari frontend lokal
 const corsOptions = {
   origin: [
-    'http://localhost:3000', // Alamat default React dev server
-    'http://localhost:3001', // Alamat lain yang mungkin
+    "http://localhost:3000", // Alamat default React dev server
+    "http://localhost:3001", // Alamat lain yang mungkin
     // Nanti kita bisa tambahkan URL frontend setelah di-deploy
   ],
-  optionsSuccessStatus: 200 
+  optionsSuccessStatus: 200,
 };
 
 // Enable CORS for all routes
