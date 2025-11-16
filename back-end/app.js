@@ -37,7 +37,7 @@ const corsOptions = {
   origin: [
     "http://localhost:3000", // Alamat default React dev server
     "http://localhost:3001", // Alamat lain yang mungkin
-    // Nanti kita bisa tambahkan URL frontend setelah di-deploy
+    "https://dashboard-wmt-frontend.netlify.app", // URL frontend di Netlify
   ],
   optionsSuccessStatus: 200,
 };
