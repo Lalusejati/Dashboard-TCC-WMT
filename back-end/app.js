@@ -109,6 +109,9 @@ const mqttClient = {
   },
 };
 
+// Initialize routes middleware
+app.use("/api/pengujian", require("./routes/pengujian"));
+
 // REACT BUILD for production
 if (process.env.NODE_ENV === "PROD") {
   app.use(express.static(path.join(__dirname, "build")));
@@ -116,9 +119,6 @@ if (process.env.NODE_ENV === "PROD") {
     res.sendFile(path.join(__dirname, "build", "index.html"));
   });
 }
-
-// Initialize routes middleware
-app.use("/api/pengujian", require("./routes/pengujian"));
 
 const PORT = process.env.PORT || 5100;
 
