@@ -18,11 +18,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 // reactstrap components
-import {
-  Navbar,
-  Nav,
-  Container,
-} from "reactstrap";
+import { Navbar, Nav, Container } from "reactstrap";
 
 const AdminNavbar = (props) => {
   return (
