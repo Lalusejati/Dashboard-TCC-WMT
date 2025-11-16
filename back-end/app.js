@@ -128,6 +128,16 @@ http.createServer({}, app).listen(PORT, function () {
   );
   // Start MQTT client after server starts
   mqttClient.connectAndSubscribe();
+
+  // --- ALAT DIAGNOSTIK BARU ---
+  try {
+    console.log("--- Registered API Endpoints ---");
+    const listEndpoints = require("express-list-endpoints");
+    console.log(JSON.stringify(listEndpoints(app), null, 2));
+    console.log("--------------------------");
+  } catch (e) {
+    console.error("Could not list endpoints:", e.message);
+  }
 });
 
 // FOR HTTPS ONLY
