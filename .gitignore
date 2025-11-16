@@ -48,3 +48,6 @@ Thumbs.db
 *.mov
 *.wmv
 
+# Environment variables
+/back-end/.env
+/front-end/.env

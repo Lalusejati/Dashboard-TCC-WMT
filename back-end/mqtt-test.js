@@ -23,13 +23,13 @@ client.on("connect", () => {
 
   const topic = process.env.MQTT_TOPIC;
   const message = JSON.stringify({
-    idPengguna: 101,
-    idAlat: "WMT-MQTT-TEST-01",
-    noSeriWm: "WM-MQTT-2411",
-    merekWm: "Merek MQTT Test",
-    standMeterAwal: 500,
-    standMeterAkhir: 505,
-    durasiPengujian: 180,
+    idPengguna: 102,
+    idAlat: "WMT-MQTT-TEST-02",
+    noSeriWm: "WM-MQTT-2412",
+    merekWm: "Merek MQTT Testing",
+    standMeterAwal: 502,
+    standMeterAkhir: 508,
+    durasiPengujian: 155,
     statusPengujian: "Lolos",
     waktuMulai: new Date().toISOString(),
     waktuSelesai: new Date().toISOString(),
