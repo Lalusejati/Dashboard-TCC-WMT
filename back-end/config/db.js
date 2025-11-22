@@ -14,12 +14,12 @@ const sequelize = new Sequelize(
     host: process.env.DB_HOST,
     port: process.env.DB_PORT,
     dialect: "mysql",
-    dialectOptions: {
-      // Konfigurasi SSL untuk koneksi aman ke TiDB Cloud
-      ssl: {
-        ca: fs.readFileSync(path.join(__dirname, "..", "ca.pem")),
-      },
-    },
+    // dialectOptions: {
+    //   // Konfigurasi SSL untuk koneksi aman ke TiDB Cloud
+    //   ssl: {
+    //     ca: fs.readFileSync(path.join(__dirname, "..", "ca.pem")),
+    //   },
+    // },
     logging: false, // Matikan logging SQL query di konsol
   }
 );
