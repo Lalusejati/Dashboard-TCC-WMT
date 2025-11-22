@@ -37,7 +37,8 @@ const corsOptions = {
   origin: [
     "http://localhost:3000", // Alamat default React dev server
     "http://localhost:3001", // Alamat lain yang mungkin
-    "https://dashboard-wmt-frontend.netlify.app", // URL frontend di Netlify
+    "https://31.97.223.53:5100",
+    "http://31.97.223.53",
   ],
   optionsSuccessStatus: 200,
 };
@@ -122,7 +123,7 @@ if (process.env.NODE_ENV === "PROD") {
 
 const PORT = process.env.PORT || 5100;
 
-http.createServer({}, app).listen(PORT, function () {
+http.createServer({}, app).listen(PORT,"0.0.0.0", function () {
   console.log(
     "App listening on port " + PORT + "! Go to http://localhost:" + PORT + "/"
   );
