@@ -26,7 +26,7 @@ import "assets/scss/argon-dashboard-react.scss";
 import AdminLayout from "layouts/Admin.js";
 
 ReactDOM.render(
-  <BrowserRouter>
+  <BrowserRouter basename="/Simair">
     <Switch>
       <Route path="/admin" render={(props) => <AdminLayout {...props} />} />
       <Redirect from="/" to="/admin/dashboard" />
