@@ -1,0 +1,33 @@
+{
+  "files": {
+    "main.css": "/Simair/static/css/main.62c70d96.css",
+    "main.js": "/Simair/static/js/main.10b86d12.js",
+    "static/media/fa-solid-900.svg": "/Simair/static/media/fa-solid-900.a84653d4fe0072d182b6.svg",
+    "static/media/fa-brands-400.svg": "/Simair/static/media/fa-brands-400.55faa7ef298ebafcc322.svg",
+    "static/media/fa-solid-900.eot": "/Simair/static/media/fa-solid-900.a0b3c6d0d774520787d8.eot",
+    "static/media/fa-solid-900.ttf": "/Simair/static/media/fa-solid-900.8618686494a5c8092120.ttf",
+    "static/media/fa-regular-400.svg": "/Simair/static/media/fa-regular-400.fa5f132deb163050a148.svg",
+    "static/media/fa-brands-400.eot": "/Simair/static/media/fa-brands-400.3825c40fd00d9bbb76b7.eot",
+    "static/media/fa-brands-400.ttf": "/Simair/static/media/fa-brands-400.1437eef49e3db661f92c.ttf",
+    "static/media/nucleo-icons.svg": "/Simair/static/media/nucleo-icons.01ebecaf50461162d4bc.svg",
+    "static/media/fa-solid-900.woff": "/Simair/static/media/fa-solid-900.afbdcbccd6861d9cdc38.woff",
+    "static/media/fa-brands-400.woff": "/Simair/static/media/fa-brands-400.e1c1a88e6228f902435e.woff",
+    "static/media/fa-brands-400.woff2": "/Simair/static/media/fa-brands-400.9a01a31d6767f82529dc.woff2",
+    "static/media/fa-solid-900.woff2": "/Simair/static/media/fa-solid-900.0f27e9b933cc50abbbba.woff2",
+    "static/media/fa-regular-400.eot": "/Simair/static/media/fa-regular-400.eb99d5076e8ce45ccfa1.eot",
+    "static/media/fa-regular-400.ttf": "/Simair/static/media/fa-regular-400.814c2c571f030686e71c.ttf",
+    "static/media/nucleo-icons.eot": "/Simair/static/media/nucleo-icons.19abb5402a664606b14c.eot",
+    "static/media/nucleo-icons.ttf": "/Simair/static/media/nucleo-icons.d6a66724e7a7bf1bba65.ttf",
+    "static/media/fa-regular-400.woff": "/Simair/static/media/fa-regular-400.acdccc059cdf7b4063e9.woff",
+    "static/media/fa-regular-400.woff2": "/Simair/static/media/fa-regular-400.5fab4ed5c3745c12c7e1.woff2",
+    "static/media/nucleo-icons.woff": "/Simair/static/media/nucleo-icons.c82c9b7c40130b7116d3.woff",
+    "static/media/nucleo-icons.woff2": "/Simair/static/media/nucleo-icons.cba267483aa6a7cb6e33.woff2",
+    "index.html": "/Simair/index.html",
+    "main.62c70d96.css.map": "/Simair/static/css/main.62c70d96.css.map",
+    "main.10b86d12.js.map": "/Simair/static/js/main.10b86d12.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.62c70d96.css",
+    "static/js/main.10b86d12.js"
+  ]
+}
